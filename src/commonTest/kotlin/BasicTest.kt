@@ -1,20 +1,107 @@
+import dev.ktobe.notToBe
+import dev.ktobe.notToBeEqual
 import dev.ktobe.toBe
+import dev.ktobe.toBeEqual
 import kotlin.test.Test
 
 
 internal class BasicTest {
 
     @Test
-    fun `should match toBe when elements are same`() {
+    fun `should pass toBe when elements are same`() {
         // Given
-        val bob = "Bob Dylan"
-        val dylan = "Bob Dylan"
+        val loupa = "loupa"
+        val loupeaux = "loupa"
 
         // Then
-        assertNothingThrown { bob toBe dylan }
+        assertNothingThrown { loupa toBe loupeaux }
     }
 
+    @Test
+    fun `should fail toBe when elements are not same`() {
+        // Given
+        val loupa = "loupa"
+        val poupa = "poupa"
 
-    private fun assertNothingThrown(block: () -> Unit) = block.invoke()
+        // Then
+        assertThrown<AssertionError> { loupa toBe poupa }
+    }
+
+    @Test
+    fun `should pass notToBe when elements are different`() {
+        // Given
+        val loupa = "loupa"
+        val poupa = "poupa"
+
+        // Then
+        assertNothingThrown { loupa notToBe poupa }
+    }
+
+    @Test
+    fun `should fail notToBe when elements are same`() {
+        // Given
+        val loupa = "loupa"
+        val loupeaux = "loupa"
+
+        // Then
+        assertThrown<AssertionError> { loupa notToBe loupeaux }
+    }
+
+    @Test
+    fun `should pass toBeEqual when elements are equal`() {
+        // Given
+        val loupa = TestModel("loupa", 42)
+        val loupeaux = TestModel("loupa", 42)
+
+        // Then
+        assertNothingThrown { loupa toBeEqual loupeaux }
+    }
+
+    @Test
+    fun `should fail toBeEqual when elements are not equal`() {
+        // Given
+        val loupa = TestModel("loupa", 42)
+        val poupa = TestModel("poupa", 34)
+
+        // Then
+        assertThrown<AssertionError> { loupa toBeEqual poupa }
+    }
+
+    @Test
+    fun `should pass notToBeEqual when elements are not equal`() {
+        // Given
+        val loupa = TestModel("loupa", 42)
+        val poupa = TestModel("poupa", 34)
+
+        // Then
+        assertNothingThrown { loupa notToBeEqual poupa }
+    }
+
+    @Test
+    fun `should fail notToBeEqual when elements are not equal`() {
+        // Given
+        val loupa = TestModel("loupa", 42)
+        val loupeaux = TestModel("loupa", 42)
+
+        // Then
+        assertThrown<AssertionError> { loupa notToBeEqual loupeaux }
+    }
+
+    data class TestModel(val s: String, val n: Int)
+}
+
+
+fun assertNothingThrown(block: () -> Unit) = block.invoke()
+
+inline fun <reified T : Throwable>assertThrown(block: () -> Unit) {
+    try {
+        block.invoke()
+    } catch (e: Throwable) {
+        if (e !is T) {
+            throw e
+        }
+        return
+    }
+    throw AssertionError("Nothing was thrown")
 }
 
