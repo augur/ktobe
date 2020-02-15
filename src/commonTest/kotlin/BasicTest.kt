@@ -4,7 +4,6 @@ import dev.ktobe.toBe
 import dev.ktobe.toBeEqual
 import kotlin.test.Test
 
-
 internal class BasicTest {
 
     @Test
@@ -90,18 +89,4 @@ internal class BasicTest {
     data class TestModel(val s: String, val n: Int)
 }
 
-
-fun assertNothingThrown(block: () -> Unit) = block.invoke()
-
-inline fun <reified T : Throwable>assertThrown(block: () -> Unit) {
-    try {
-        block.invoke()
-    } catch (e: Throwable) {
-        if (e !is T) {
-            throw e
-        }
-        return
-    }
-    throw AssertionError("Nothing was thrown")
-}
 
