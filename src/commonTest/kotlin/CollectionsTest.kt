@@ -1,4 +1,5 @@
 import dev.ktobe.toContainExactly
+import dev.ktobe.toContainJust
 import dev.ktobe.toContainOnly
 import kotlin.test.Test
 
@@ -56,5 +57,41 @@ internal class CollectionsTest {
 
         // Then
         assertThrown<AssertionError> { users toContainOnly setOf("loupa") }
+    }
+
+    @Test
+    fun `should pass toContainJust when iterable has just a matching element`() {
+        // Given
+        val users = setOf("loupa")
+
+        // Then
+        assertNothingThrown { users toContainJust "loupa" }
+    }
+
+    @Test
+    fun `should fail toContainJust when iterable is empty`() {
+        // Given
+        val users = emptyList<String>()
+
+        // Then
+        assertThrown<AssertionError> { users toContainJust "loupa" }
+    }
+
+    @Test
+    fun `should fail toContainJust when iterable has another element`() {
+        // Given
+        val users = listOf("poupa")
+
+        // Then
+        assertThrown<AssertionError> { users toContainJust "loupa" }
+    }
+
+    @Test
+    fun `should fail toContainJust when iterable has more than single element`() {
+        // Given
+        val users = listOf("loupa", "poupa")
+
+        // Then
+        assertThrown<AssertionError> { users toContainJust "loupa" }
     }
 }
