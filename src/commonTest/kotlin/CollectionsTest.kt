@@ -1,6 +1,4 @@
-import dev.ktobe.toContainExactly
-import dev.ktobe.toContainJust
-import dev.ktobe.toContainOnly
+import dev.ktobe.*
 import kotlin.test.Test
 
 internal class CollectionsTest {
@@ -20,7 +18,7 @@ internal class CollectionsTest {
         val users = listOf("loupa", "poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainExactly listOf("loupa") }
+        assertThrown<ToBeAssertError> { users toContainExactly listOf("loupa") }
     }
 
     @Test
@@ -29,7 +27,7 @@ internal class CollectionsTest {
         val users = listOf("loupa", "poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainExactly listOf("poupa", "loupa") }
+        assertThrown<ToBeAssertError> { users toContainExactly listOf("poupa", "loupa") }
     }
 
     @Test
@@ -47,7 +45,7 @@ internal class CollectionsTest {
         val users = setOf("loupa", "poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainOnly setOf("loupa") }
+        assertThrown<ToBeAssertError> { users toContainOnly setOf("loupa") }
     }
 
     @Test
@@ -56,7 +54,7 @@ internal class CollectionsTest {
         val users = setOf("poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainOnly setOf("loupa") }
+        assertThrown<ToBeAssertError> { users toContainOnly setOf("loupa") }
     }
 
     @Test
@@ -74,7 +72,7 @@ internal class CollectionsTest {
         val users = emptyList<String>()
 
         // Then
-        assertThrown<AssertionError> { users toContainJust "loupa" }
+        assertThrown<ToBeAssertError> { users toContainJust "loupa" }
     }
 
     @Test
@@ -83,7 +81,7 @@ internal class CollectionsTest {
         val users = listOf("poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainJust "loupa" }
+        assertThrown<ToBeAssertError> { users toContainJust "loupa" }
     }
 
     @Test
@@ -92,6 +90,42 @@ internal class CollectionsTest {
         val users = listOf("loupa", "poupa")
 
         // Then
-        assertThrown<AssertionError> { users toContainJust "loupa" }
+        assertThrown<ToBeAssertError> { users toContainJust "loupa" }
+    }
+
+    @Test
+    fun `should pass toContain when iterable has matching element`() {
+        // Given
+        val users = setOf("loupa", "poupa", "john", "dick")
+
+        // Then
+        assertNothingThrown { users toContain "poupa" }
+    }
+
+    @Test
+    fun `should fail toContain when iterable hasn't matching element`() {
+        // Given
+        val users = setOf("loupa", "john", "dick")
+
+        // Then
+        assertThrown<ToBeAssertError> { users toContain "poupa" }
+    }
+
+    @Test
+    fun `should pass notToContain when iterable hasn't matching element`() {
+        // Given
+        val users = setOf("loupa", "john", "dick")
+
+        // Then
+        assertNothingThrown { users notToContain "poupa" }
+    }
+
+    @Test
+    fun `should fail notToContain when iterable has matching element`() {
+        // Given
+        val users = setOf("loupa", "poupa", "john", "dick")
+
+        // Then
+        assertThrown<ToBeAssertError> { users notToContain "poupa" }
     }
 }
