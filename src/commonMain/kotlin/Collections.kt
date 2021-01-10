@@ -16,6 +16,7 @@ infix fun <V, T : Collection<V>> T.toContainExactly(other: T): T {
     return this
 }
 
+//TODO for all Iterables
 infix fun <V, T : Set<V>> T.toContainOnly(other: T): T {
     if (this.size != other.size) throw toContainOnlyError(other)
     if (this.size != (this intersect other).size) throw toContainOnlyError(other)
@@ -39,3 +40,5 @@ infix fun <V, T : Iterable<V>> T.notToContain(other: V): T {
     if (this.contains(other)) throw notToContainError(other)
     return this
 }
+
+//TODO toContainAll
